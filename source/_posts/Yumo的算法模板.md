@@ -3,12 +3,11 @@ title: Yumo的算法模板
 date: 2025-11-15 18:24:30
 tags: 算法竞赛
 categories: 算法竞赛
-excerpt: 这篇文章收集了一些自己常用的算法模板
-index_img: /img/blog01.jpg
+excerpt: 这篇文章收集了一些自己常用的算法模板。
+index_img: /img/00.jpg
 banner_img: /img/luo8th.png
 math: true
 ---
-
 ## int128IO
 
 ```cpp
@@ -41,10 +40,61 @@ void print(i128 num) {
 }
 ```
 
+## 对拍
+
+```python
+from subprocess import run
+from random import randint
+
+def rand():
+    n = randint(1, 20)
+    s = str(n) + "\n"
+    for _ in range(n):
+        s += f"{randint(1, 500)} {randint(1, 10**5)} {randint(1, 10**5)}\n"
+    return s
+
+def r(program, _input):
+    return run(
+        program,
+        input = _input,
+        capture_output = True,
+        text = True
+    ).stdout
+
+cnt = 0
+while(True):
+    _in = rand()
+
+    _out1 = r("./a.exe", _in)
+    _out2 = r("./b.exe", _in)
+
+    if(_out1 == _out2):
+        cnt += 1
+        print(cnt)
+    else:
+        print(_in)
+        print(_out1)
+        print(_out2)
+        print("\n")
+        break
+```
+
 ## 数学相关
 
-### 判断质数 $O(\frac{\sqrt{N}}{3})$
+### 手写gcd，lcm
 
+```cpp
+int gcd(int a, int b) {
+    if(b == 0) return a;
+    return gcd(b, a % b);    
+}
+
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+```
+
+### 判断质数 $O(\frac{\sqrt{N}}{3})$
 ```cpp
 bool is_prime(int n) {
  	if (n < 2) return false;
@@ -69,14 +119,14 @@ void sieve(int n) {
     vector<bool> isprime(n + 1, true);
     isprime[0] = isprime[1] = false;
     
-    for(int i = 2; i * i < n; i++) {
+    for(int i = 2; i * i <= n; i++) {
         if(isprime[i]) {
-            for(int j = i * i; j < n; j += i) {
+            for(int j = i * i; j <= n; j += i) {
                 isprime[j] = false;
             }
         }
     }
-    for(int i = 2; i < n; i++) {
+    for(int i = 2; i <= n; i++) {
         if(isprime[i]) primes.push_back(i);
     }
 }
@@ -85,8 +135,9 @@ void sieve(int n) {
 ### 质因数分解
 
 ```cpp
-auto factor = [&](int n) {
-   	vector<int> ans;
+vector<int> ans;
+auto factor = [&](int n) -> void {
+    vector<int> ans;
     for(int p : primes) {
         if(p * p > n) break;
         while(n % p == 0) {
@@ -94,29 +145,29 @@ auto factor = [&](int n) {
             n /= p;
         }
     }
-    ans.push_back(n);
-    return ans;
-};
+    if(n > 1) ans.push_back(n);
+};  
 ```
 
-### 线性筛
+### 欧拉筛
 
 ```cpp
-vector<int> minp(N + 10), primes;
-vector<int> total(N + 1);
-   
-void init(vector<int> &minp, vector<int> &primes, int ma) {
-    for(int i = 2; i <= ma; i++) {
-        if(!minp[i]) {
-            minp[i] = i;
-            primes.emplace_back(i);
+const int N = 1e7 + 5;
+
+vector<int> primes;    
+int spf[N];
+
+void sieve(int n) {
+    for(int i = 2; i <= n; i++) {
+        if(!spf[i]) {               
+            spf[i] = i;
+            primes.push_back(i);
         }
-        for(auto & p : primes) {
-            if(i * p > ma) break;   
-            minp[i * p] = p;
-            if(p == minp[i]) break;
+        for(int p : primes) {
+            if(p > spf[i] || i * p > n) break;
+            spf[i * p] = p;
         }
-    } 
+    }
 }
 ```
 
@@ -128,7 +179,7 @@ int qpow(int a, int b, int p) {
     while(b) {
         if(b & 1) res = res * a % p;
         a = a * a % p;
-        b >>= 1;
+        b >>= 1;	
     }
     return res;
 }
@@ -241,7 +292,8 @@ void solve() {
 }
 ```
 
-### 矩阵快速幂 $O(n^3\log_{2}n)$
+### 矩阵快速幂 $O(n^{3}\log_2n)$
+
 
 ```cpp
 struct matrix{
@@ -494,27 +546,143 @@ signed main() {
 }
 ```
 
-### 式子
+### 多项式
 
-1. $$
+#### FFT 迭代实现
+#### 代码为多项式乘法
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using i64 = long long;
+#define int long long
+const int INF = 1e18;
+const static double PI = acos(-1);
+const static double eps = 1e-15;
+
+struct Complex {
+    double x, y;
+    Complex(double _x = 0.0, double _y = 0.0){
+        x = _x;
+        y = _y;
+    }
+    Complex operator - (const Complex &rhs) const {
+        return Complex(x - rhs.x, y - rhs.y);
+    }
+    Complex operator + (const Complex &rhs) const {
+        return Complex(x + rhs.x, y + rhs.y);
+    }
+    Complex operator * (const Complex &rhs) const {
+        return Complex(x * rhs.x - y * rhs.y, y * rhs.x + x * rhs.y);
+    }
+    Complex conj() const {
+        return {x, -y}; 
+    }
+};
+
+vector<int> rev;
+vector<Complex> roots;
+
+void init(int n) {
+    int h = 0;
+    while((1 << h) < n) h++;
+    rev.resize(n);
+    for(int i = 0; i < n; i++) {
+        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (h - 1));
+    }
+
+    roots.resize(n);
+    for(int i = 0; i < n; i++) {
+        roots[i] = Complex(cos(2 * PI * i / n), sin(2 * PI * i / n));
+    }
+}
+
+void fft(vector<Complex>& a, int inv) {
+    int n = a.size();
+    if(rev.size() != n) init(n);
+
+    for(int i = 0; i < n; i++) {
+        if(i < rev[i]) swap(a[i], a[rev[i]]);
+    }
+
+    for(int len = 2; len <= n; len <<= 1) {
+        int step = n / len;
+        for(int i = 0; i < n; i += len) {
+            for(int j = 0; j < len / 2; j++) {
+                Complex w = roots[step * j];
+                if(inv == -1) w = w.conj();
+                Complex u = a[i + j], v = a[i + j + len / 2] * w;
+                a[i + j] = u + v;
+                a[i + j + len / 2] = u - v;
+            }
+        }
+    }
+    if(inv == -1) {
+        for(auto &[x, y] : a) x /= n;
+    }
+}
+
+void solve() {
+    int n1, n2;
+    cin >> n1 >> n2;
+    n1++;
+    n2++;
+
+    int total = n1 + n2 - 1;
+    int n = 1;
+    while(n < total) n <<= 1;
+
+    vector<Complex> fa(n), fb(n);
+
+    for(int i = 0; i < n1; i++) cin >> fa[i].x;
+    for(int i = 0; i < n2; i++) cin >> fb[i].x;
+
+    fft(fa, 1);
+    fft(fb, 1);
+    for(int i = 0; i < n; i++) fa[i] = fa[i] * fb[i];
+    fft(fa, -1);
+
+    vector<int> res(total);
+    for(int i = 0; i < total; i++) res[i] = (int)(fa[i].x + 0.5);
+    for(int i = 0; i < total; i++) cout << res[i] << " ";
+}
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int qwq = 1;
+    while(qwq--) solve();
+
+    return 0;
+}
+```
+
+### 和式推导
+
+1. 
+   $$
    \sum_{1\leq a \leq b \leq m} p_b = \sum_{b = 2}^{m}p_b \times(b - 1)
    $$
 
    对于每个 $p_b$ ，其前面的 $p_a$ 的数量都是 $b-1$ 个。
 
-2. $$
+2. 
+   $$
    \sum_{1\leq a \leq b \leq m} p_a = \sum_{a = 1}^{m - 1}p_a \times(m - a)
    $$
 
    对于每个 $p_a$ ，其后面的 $p_b$ 的数量都是 $m-a$ 对。
 
-3. $$
+3. 
+   $$
    \sum_{1\leq a \leq b \leq m} 1 = \binom{m}{2} = \frac{m(m-1)}{2}
    $$
 
-   从 $m$ 个位置中任意选择 2 个位置
+   从 $m$ 个位置中任意选择 $2$ 个位置
 
-4. $$
+4. 
+   $$
    \begin {aligned}
    \text{Sum}&=  \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}a_i + a_j \\ &=
    \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} a_i + \sum_{i=1}^{n-1}\sum_{j=i+1}^{n} a_j \\ &=
@@ -627,102 +795,73 @@ struct ST {
 ### 线段树 - 区间求和 区间加k
 
 ```cpp
-#include <bits/stdc++.h>
-using namespace std;
-using i64 = long long;
-using u64 = unsigned long long;
-const int INF = 0x3f3f3f3f;
-#define int i64
-
-void solve() {
-    int n, m;
-    cin >> n >> m;
-    vector<i64> a(n + 1), d(n * 4), lazy(n * 4);
-    for(int i = 1; i <= n; i++) cin >> a[i];
-
-    auto pushUp = [&](i64 k) -> void {
-        d[k] = d[k << 1] + d[k << 1 | 1];
-    };
+struct SegTree {
+    int n;
+    vector<int> a, d, lazy;
+    SegTree(int n) : a(n + 1), d(n * 4 + 1), lazy(n * 4 + 1) {};
     
-    auto pushDown = [&](int k, int l, int r) -> void {
-        if (lazy[k]) {
+    void pushup(int p) {
+        d[p] = d[p << 1] + d[p << 1 | 1];
+    }
+
+    void pushdown(int p, int l, int r) {
+        if(lazy[p] != 0 && l != r) {
             int mid = (l + r) >> 1;
-            int left = k << 1, right = k << 1 | 1;
+            int len_l = mid - l + 1;
+            int len_r = r - mid;
 
-            lazy[left] += lazy[k];
-            lazy[right] += lazy[k];
-
-            d[left] += lazy[k] * (mid - l + 1);
-            d[right] += lazy[k] * (r - mid);
+            d[p << 1] += lazy[p] * len_l;
+            lazy[p << 1] += lazy[p];
             
-            lazy[k] = 0;
-        }
-    };
+            d[p << 1 | 1] += lazy[p] * len_r;
+            lazy[p << 1 | 1] += lazy[p];
 
-    auto build = [&](auto self, i64 k, i64 l, i64 r) -> void{
-        if(l == r) {
-            d[k] = a[l];
-            return;
-        }
-        int m = (l + r) >> 1;
-
-        self(self, k << 1, l, m); // 左树
-        self(self, k << 1 | 1, m + 1, r); // 右树
-
-        pushUp(k);
-    };
-
-    auto update = [&](auto self, int k, int l, int r, int x, int y, int val) {
-        if(x <= l && r <= y) {
-            d[k] += val * (r - l + 1);
-            lazy[k] += val;
-            return;
-        }
-        pushDown(k, l, r);
-
-        int m = (l + r) >> 1;
-
-        if(x <= m) self(self, k << 1, l, m, x, y, val);
-        if(y > m) self(self, k << 1 | 1, m + 1, r, x, y, val);
-        pushUp(k);
-    };
-
-    auto query = [&](auto self, int k, int l, int r, int x, int y) -> i64 {
-        if(x <= l && r <= y) return d[k];
-        pushDown(k, l, r);
-        int m = (l + r) >> 1;
-        i64 sum = 0;
-
-        if(x <= m) sum += self(self, k << 1, l, m, x, y);
-        if(y > m) sum += self(self, k << 1 | 1, m + 1, r, x, y);
-        return sum;
-    };
-
-    build(build, 1, 1, n);
-
-    for(int i = 1; i <= m; i++) {
-        int op; cin >> op;
-        if(op == 1) {
-            int x, y, k;
-            cin >> x >> y >> k;
-            update(update, 1, 1, n, x, y, k);
-        } else {
-            int x, y;
-            cin >> x >> y;
-            cout << query(query, 1, 1, n, x, y) << '\n';
+            lazy[p] = 0;
         }
     }
-}
 
-signed main(){
-    ios::sync_with_stdio(false);
-    cin.tie(0), cout.tie(0);
+    void build(int p, int l, int r) {
+        lazy[p] = 0;
+        if(l == r) {
+            d[p] = a[r];
+            return;
+        }
+        int mid = (l + r) >> 1;
+        build(p << 1, l ,mid);
+        build(p << 1 | 1, mid + 1, r);
+        pushup(p);
+    };
 
-    int T = 1;
-    while(T--) solve();
+    void update(int p, int l, int r, int ql, int qr, int v) {
+        if(ql <= l && r <= qr) {
+            d[p] += v * (r - l + 1);
+            lazy[p] += v;
+            return;
+        }
+        pushdown(p, l, r);
+        
+        int mid = (l + r) >> 1;
+        if(ql <= mid) update(p << 1, l, mid, ql, qr, v);
+        if(qr > mid) update(p << 1 | 1, mid + 1, r, ql, qr, v);
 
-    return 0;
-}
+        pushup(p);
+    }
+
+    int query(int p, int l, int r, int ql, int qr) {
+        if(ql <= l && r <= qr) {
+            return d[p];
+        }
+
+        pushdown(p, l, r);
+        int mid = (l + r) >> 1;
+        int res = 0;
+
+        if(ql <= mid) res += query(p << 1, l, mid, ql, qr);
+        if(qr > mid) res += query(p << 1 | 1, mid + 1, r, ql, qr);
+        
+        return res;
+    }
+};
 ```
 
 ### 扫描线 - 离散化
@@ -809,6 +948,85 @@ signed main(){
 }
 ```
 
+## 字符串
+
+### 字典树 / Trie
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using i64 = long long;
+
+int ch[3000010][65];
+int cnt[3000010];
+
+struct Trie {
+    unordered_map<char, int> mp;
+
+    Trie() {
+        int id = 0;
+        for(char c = 'a'; c <= 'z'; c++) mp[c] = ++id; 
+        for(char c = 'A'; c <= 'Z'; c++) mp[c] = ++id; 
+        for(char c = '0'; c <= '9'; c++) mp[c] = ++id; 
+    } 
+
+    int idx = 0;
+    void insert(string s) {
+        int u = 0;
+        for(auto c : s) {
+            int v = mp[c];
+            if(!ch[u][v]) ch[u][v] = ++idx;
+            u = ch[u][v];
+            cnt[u]++;
+        }
+    }
+    int query(string s) {
+        int u = 0;
+        for(auto c : s) {
+            int v = mp[c];
+            if(!ch[u][v]) return 0;
+            u = ch[u][v];
+        }
+        return cnt[u];
+    }
+    void clear() {
+        for(int i = 0; i <= idx; i++) {
+            cnt[i] = 0;
+            for(int j = 0; j <= 64; j++) {
+                ch[i][j] = 0;
+            }
+        }
+        idx = 0;
+    }
+};
+
+void solve() {
+    int n, m; cin >> n >> m;
+    
+    Trie trie;
+    for(int i = 1; i <= n; i++) {
+        string s; cin >> s;
+        trie.insert(s);
+    }
+    for(int i = 1; i <= m; i++) {
+        string s; cin >> s;
+        cout << trie.query(s) << "\n";
+    }
+    trie.clear();
+}
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+
+    int qwq = 1;
+    cin >> qwq;
+    while(qwq--) solve();
+
+    return 0;
+}
+```
+
 ## 图论
 
 ### 最短路 - dijkstra
@@ -859,29 +1077,96 @@ for(int k = 1; k <= n; k++) {
 
 ### 最小生成树 - kruskal
 
+不用邻接表建图，记录所有的边，排序后用并查集取最小边权和。
+
 ```cpp
-int gf(int x){
-    if(x == fa[x]) return x;
-
-    return fa[x] = gf(fa[x]);
-}
-
-void kruskal(){
-    cnt = n;
-    sort(a, a + m + 1, cmp);
-    for(int i = 1; i <= m; i++){
-        int x = gf(a[i].x);
-        int y = gf(a[i].y);
-        if(x != y){
-            cnt--;
-            fa[x] = y;
-            ans += a[i].v;
-        }
+struct DSU {
+    vector<int> sz, fa;
+    DSU(int n) : sz(n + 1), fa(n + 1) {
+        iota(fa.begin(), fa.end(), 0);
     }
-}
-int main() {
+
+    int find(int u) {
+        if(fa[u] != u) fa[u] = find(fa[u]);
+        return fa[u];
+    }
+
+    bool unite(int u, int v) {
+        u = find(u);
+        v = find(v);
+
+        if(u == v) return false;
+
+        if(sz[u] < sz[v]) swap(u, v);
+        
+        fa[v] = u;
+        sz[u] += sz[v];
+
+        return true;
+    }
+};
+
+void solve() {
+    struct edge {
+        int u, v, w;
+    };
+    
+    int n, m;
     cin >> n >> m;
-    for(int i = 1; i <= n; i++) fa[i] = i;
-	kruskal();
+    
+    vector<edge> edges;
+    for(int i = 1; i <= m; i++) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        edges.push_back({u, v, w});
+    }    
+
+    sort(edges.begin(), edges.end(), [&](auto _1, auto _2) -> bool {
+        return _1.w < _2.w;
+    });
+
+    DSU dsu(n + 1);
+
+    int ans = 0;
+    int cnt = 0;    
+    for(auto t : edges) {
+        int u = t.u;
+        int v = t.v;
+        int w = t.w;
+
+        if(dsu.find(u) == dsu.find(v)) continue;
+
+        dsu.unite(u, v);
+        ans += w;
+        cnt += 1;
+    }
+
+    if(cnt == n - 1) cout << ans << "\n";
+    else cout << "-1\n";
 }
 ```
+
+## py火车头
+
+```py
+import sys, math
+from collections import defaultdict, deque, Counter
+from heapq import heappush, heappop, heapify
+from bisect import bisect_left, bisect_right
+from math import gcd, lcm
+def lower_bound(a, x): return bisect_left(a, x)
+def upper_bound(a, x): return bisect_right(a, x)
+
+sys.setrecursionlimit(10**5)
+input = sys.stdin.readline
+
+def solve():
+	pass
+ 
+if __name__ == "__main__":
+    qwq = 1
+    # qwq = int(input())
+    for _ in range(qwq):
+        solve()
+```
+

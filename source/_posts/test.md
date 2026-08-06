@@ -5,6 +5,7 @@ tags: 数学
 categories: 数学
 banner_img: /img/luo8th.png
 index_img: /img/blog02.jpg
+excerpt: 用于测试本博客的LaTeX渲染是否有效。
 math: true
 ---
 
