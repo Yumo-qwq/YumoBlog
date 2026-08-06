@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "霞鹜文楷";
+  src: url("../fonts/LXGWWenKai-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.custom-font {
+  font-size: 100px;
+  line-height: 1.7;
+}
