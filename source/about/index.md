@@ -12,5 +12,3 @@ avatar: /img/top.jpg
 人工智能本科在读。
 
 中文VOCALOID听众。
-
-现役ACM选手。
