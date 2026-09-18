@@ -1,5 +1,6 @@
 ---
 title: AI与大学与我们的未来
+hide: true
 date: 2026-09-18 10:38:06
 tags: 杂谈
 categories: 杂谈
