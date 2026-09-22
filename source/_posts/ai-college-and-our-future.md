@@ -1,6 +1,5 @@
 ---
 title: AI与大学与我们的未来
-hide: true
 date: 2026-09-18 10:38:06
 tags: 杂谈
 categories: 杂谈
@@ -12,6 +11,10 @@ math: true
 {% note info %}
 欢迎来到未来，尽管没人知道未来是好是坏。
 {% endnote %}
+
+
+总之先祝贺各位脱离了坐牢生活。
+
 
 # 欢迎来到未来
 2026年9月4日，在2026届新生还未报道的这一天，OpenAI 发布了[GPT-6 Astra](https://www.bilibili.com/video/BV1CJbc6JExi)。
@@ -44,4 +47,7 @@ CS(Computer Science, 计算机科学)学生面临的是一个以周为单位迭�
 
 这种例子可以找出无数个：
 - [软件工程与纸上谈兵](https://blog.lyc8503.net/post/4-years-at-nju/)。
+- [副教授实名举报计算机专业学生编程水平不如小学生](https://zhuanlan.zhihu.com/p/1905773368868865384)
+
+不然我们也不会有 [csdiy](https://csdiy.wiki/#_6) 了。
 
