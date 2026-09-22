@@ -1025,18 +1025,18 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /img/luo8th.png
+  banner_img: /img/links.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
   # 友链的成员项
   # Member item of page
   items:
-    # - {
-    #   title: "Fluid Blog",
-    #   intro: "主题博客",
-    #   link: "https://hexo.fluid-dev.com/",
-    #   avatar: "/img/favicon.png"
-    # }
+    - {
+      title: "TDK 的小窝",
+      intro: "TDK 的小窝",
+      link: "https://blog.thedyingkai.cn/",
+      avatar: "/img/favicon.png"
+    }
     # - {
     #   title: "Fluid Docs",
     #   intro: "主题使用指南",
