@@ -1033,9 +1033,9 @@ links:
   items:
     - {
       title: "TDK 的小窝",
-      intro: "TDK 的小窝",
+      intro: "TDK，贴贴",
       link: "https://blog.thedyingkai.cn/",
-      avatar: "/img/favicon.png"
+      avatar: "https://blog.thedyingkai.cn/assets/images/anime/0.jpg"
     }
     # - {
     #   title: "Fluid Docs",
