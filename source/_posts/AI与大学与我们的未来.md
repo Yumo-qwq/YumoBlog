@@ -37,8 +37,11 @@ math: true
 早在二十年前，[上海交大生存手册](https://survivesjtu.gitbook.io/survivesjtumanual/li-zhi-pian/huan-ying-lai-dao-shang-hai-jiao-tong-da-xue)就已经喊出了“大学教育早已崩溃”。然而时至今日，这种情况依旧毫无改善的迹象。
 
 CS(Computer Science, 计算机科学)学生面临的是一个以周为单位迭代的新兴技术，但很遗憾，大学培养计划制订人、专业课老师、以及大部分学生都意识不到这一点，或者说即使意识到了也会装作无事发生。
+
 当AI在各种领域遍地开（bao）花（zha）的时候，我们的老师们正在照着年纪与各位不相上下的PPT，用着十几年前就被淘汰的工具，讲着早已和工业界脱节的知识。
+
 比起培养，对cs学生的高等教育更像是一种“表演”，试图营造出一种繁荣的假象。
+
 这种例子可以找出无数个：
 - [软件工程与纸上谈兵](https://blog.lyc8503.net/post/4-years-at-nju/)。
 
