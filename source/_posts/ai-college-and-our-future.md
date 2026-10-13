@@ -6,6 +6,7 @@ categories: 杂谈
 banner_img: /img/luo8th.png
 index_img: /img/26-09-18/核弹爆炸.jpg
 excerpt: 烧了200￥ token有感，并写给2026届人工智能新生。
+hide: true
 math: true
 ---
 {% note info %}
@@ -49,5 +50,5 @@ CS(Computer Science, 计算机科学)学生面临的是一个以周为单位迭�
 - [软件工程与纸上谈兵](https://blog.lyc8503.net/post/4-years-at-nju/)。
 - [副教授实名举报计算机专业学生编程水平不如小学生](https://zhuanlan.zhihu.com/p/1905773368868865384)
 
-不然我们也不会有 [csdiy](https://csdiy.wiki/#_6) 了。
+不然我们也不会有 [csdiy](https://csdiy.wiki) 了。
 
