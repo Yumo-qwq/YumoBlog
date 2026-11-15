@@ -1,5 +1,5 @@
 ---
-title: 数学建模经验分享
+title: 一个另类的数模经验分享
 date: 2026-11-15 17:57
 tags: [碎碎念, 观点]
 categories:
@@ -7,7 +7,7 @@ categories:
   - 观点
 banner_img: /img/luo8th.png
 index_img: /img/26-11-15/agent_logos.png
-excerpt: 受贾老师邀请，给新生讲了一些经验，不止局限于数模。
+excerpt: 受贾老师邀请，给新生讲了一些经验，但不止局限于数模。
 math: true
 ---
 {% note info %}
