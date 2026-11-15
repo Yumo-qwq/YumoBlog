@@ -11,6 +11,10 @@ excerpt: 受贾老师邀请，给新生讲了一些经验，不止局限于数�
 math: true
 ---
 
+{% note info %}
+这是分享的 slides 的 md 留档，如果你想看 slides 请点[这里](/slides/CUMCU2.html)
+{% endnote %}
+
 
 # 简要介绍数学建模
 
