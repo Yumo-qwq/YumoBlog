@@ -7,7 +7,7 @@ categories:
   - 观点
 banner_img: /img/luo8th.png
 index_img: /img/26-11-15/agent_logos.png
-excerpt: 受贾老师邀请，给新生讲了一些经验，但不止局限于数模。
+excerpt: 受邀给新生讲了一些经验，但不止局限于数模。
 math: true
 ---
 {% note info %}
