@@ -12,7 +12,7 @@ math: true
 updated: 2026-11-15 18:40
 ---
 {% note info %}
-这是分享的 slides 的 md 留档，如果你想看 slides 请点[**这里**](/slides/CUMCU2.html)
+这是分享的 slides 的 md 留档，如果你想看 slides 请点[**这里**](/slides/CUMCM2.html)
 {% endnote %}
 
 
