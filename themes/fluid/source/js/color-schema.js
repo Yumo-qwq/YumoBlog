@@ -249,7 +249,7 @@
         }
       };
       // giscus.style.cssText += 'color-scheme: normal;';
-      giscus.contentWindow.postMessage({ 'giscus': message }, 'https://giscus.app');
+      giscus.contentWindow.postMessage({ 'giscus': message }, new URL(giscus.src).origin);
     }
   }
 

@@ -752,7 +752,7 @@ post:
     # 指定的插件，需要同时设置对应插件的必要参数
     # The specified plugin needs to set the necessary parameters at the same time
     # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
-    type: disqus
+    type: giscus
 
 
 #---------------------------
@@ -898,17 +898,33 @@ cusdis:
 # Based on GitHub Discussions, similar to Utterances
 # See: https://giscus.app/
 giscus:
-  repo:
-  repo-id:
-  category:
-  category-id:
+  # GitHub 仓库须公开、开启 Discussions，并安装 https://github.com/apps/giscus
+  # 完成上述步骤后，从 https://giscus.app/zh-CN 获取 repo-id 和 category-id
+  repo: Yumo-qwq/YumoBlog
+  repo-id: R_kgDOQWQExg
+  # 推荐使用 Announcements 类型；清空 category 可跨分类搜索，但保留 category-id 用于创建讨论
+  category: Announcements
+  category-id: DIC_kwDOQWQExs4DMAHu
+  # 官方服务地址；自托管时替换为自己的 giscus 服务域名
+  host: https://giscus.app
+  # 支持内置主题名或完整的自定义 CSS URL，并随博客深浅色模式切换
   theme-light: light
   theme-dark: dark
+  # pathname | url | title | og:title | specific | number
   mapping: pathname
+  # specific 时填写固定标题；number 时填写已有 Discussion 编号，且不会自动创建讨论
+  term:
+  # 严格匹配，避免相似路径误关联；迁移旧讨论时需补充标题的 SHA-1（见 docs/giscus.md）
+  strict: 1
   reactions-enabled: 1
-  emit-metadata: 0
+  emit-metadata: 1
+  # top | bottom
   input-position: top
   lang: zh-CN
+  # lazy | eager
+  loading: lazy
+  # 可选：固定主题覆盖自动切换，如 theme: preferred_color_scheme
+  # 其他官方 data-* 参数也可直接添加，例如 data-reactions-enabled: "1"
 
 # Discuss
 # 多平台、多数据库、自托管、免费开源评论系统
@@ -1067,7 +1083,7 @@ links:
     # 指定的插件，需要同时设置对应插件的必要参数
     # The specified plugin needs to set the necessary parameters at the same time
     # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
-    type: utterances
+    type: giscus
 
 
 #---------------------------

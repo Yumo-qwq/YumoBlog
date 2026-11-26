@@ -1,17 +1,32 @@
-<% if (theme.giscus && theme.giscus['repo'] && theme.giscus['repo-id']) { %>
+<%
+var giscusOptions = theme.giscus || {};
+var giscusRepo = giscusOptions['data-repo'] || giscusOptions.repo;
+var giscusRepoId = giscusOptions['data-repo-id'] || giscusOptions['repo-id'];
+var giscusCategoryId = giscusOptions['data-category-id'] || giscusOptions['category-id'];
+var giscusMapping = giscusOptions['data-mapping'] || giscusOptions.mapping || 'pathname';
+var giscusTerm = giscusOptions['data-term'] || giscusOptions.term;
+var giscusHasTerm = giscusTerm !== undefined && giscusTerm !== null && String(giscusTerm).trim() !== '';
+var giscusReady = giscusRepo && giscusRepoId &&
+  (giscusMapping === 'number' ? Number.isInteger(Number(giscusTerm)) && Number(giscusTerm) > 0 : giscusCategoryId) &&
+  (giscusMapping !== 'specific' || giscusHasTerm);
+%>
+<% if (giscusReady) { %>
     <div id="giscus" class="giscus"></div>
+    <p id="giscus-load-error" role="status" hidden>评论加载失败，请刷新页面，或<a href="https://github.com/<%= giscusRepo %>/discussions" target="_blank" rel="noopener noreferrer">前往 GitHub 讨论区</a>。</p>
     <script type="text/javascript">
       Fluid.utils.loadComments('#giscus', function() {
-        var options = <%- JSON.stringify(theme.giscus || {}) %>;
+        var options = <%- JSON.stringify(giscusOptions).replace(/</g, '\\u003c') %>;
         var attributes = {};
         for (let option in options) {
-          if (!option.startsWith('theme-')) {
+          if (option !== 'host' && !option.startsWith('theme-')) {
             var key = option.startsWith('data-') ? option : 'data-' + option;
             attributes[key] = options[option];
           }
         }
-        var light = '<%= theme.giscus['theme-light'] || 'light' %>';
-        var dark = '<%= theme.giscus['theme-dark'] || 'dark' %>';
+        var host = new URL(options.host || 'https://giscus.app').origin;
+        var fixedTheme = attributes['data-theme'];
+        var light = fixedTheme || options['theme-light'] || 'light';
+        var dark = fixedTheme || options['theme-dark'] || 'dark';
         window.GiscusThemeLight = light;
         window.GiscusThemeDark = dark;
         attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
@@ -22,15 +37,20 @@
           }
         }
         var s = document.createElement('script');
-        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('src', host + '/client.js');
         s.setAttribute('crossorigin', 'anonymous');
+        s.async = true;
+        s.onerror = function() {
+          document.getElementById('giscus-load-error').hidden = false;
+        };
         for (let attribute in attributes) {
-          s.setAttribute(attribute, attributes[attribute]);
+          var value = attributes[attribute];
+          s.setAttribute(attribute, typeof value === 'boolean' ? (value ? '1' : '0') : value);
         }
-        var ss = document.getElementsByTagName('script');
-        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
-        e.parentNode.insertBefore(s, e.nextSibling);
+        document.getElementById('giscus').appendChild(s);
       });
     </script>
-    <noscript>Please enable JavaScript to view the comments</noscript>
+    <noscript>请启用 JavaScript，或<a href="https://github.com/<%= giscusRepo %>/discussions" target="_blank" rel="noopener noreferrer">前往 GitHub 讨论区</a>参与评论。</noscript>
+<% } else { %>
+    <p role="status">评论暂不可用，请稍后再试。</p>
 <% } %>

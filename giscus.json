@@ -1,0 +1,12 @@
+{
+  "origins": [
+    "https://yumo.blog",
+    "https://www.yumo.blog",
+    "http://yumo.blog",
+    "http://www.yumo.blog"
+  ],
+  "originsRegex": [
+    "^http://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
+  ],
+  "defaultCommentOrder": "newest"
+}
